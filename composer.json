@@ -1,11 +1,9 @@
 {
   "name": "valeylabs/datetime",
   "description": "DateTime manipulating PHP.",
-  "authors": [
-    {
-      "name": "Gabriel Malaquias",
-      "email": "g@gmalaquias.com"
-    }
+  "authors":
+  [
+    {"name": "Gabriel Malaquias", "email": "gemalaquias@gmail.com"}
   ],
   "keywords": ["DateTime", "valey", "valeylabs", "date"],
   "license": "MIT",
@@ -14,8 +12,7 @@
     "psr-0": { "Valey\\Components\\": "src" }
   },
   "require" : {
-
+    "php": ">=5.3.3"
   },
   "target-dir": "Valey/Components"
-
 }
