@@ -1,10 +1,12 @@
 <?php
-/**
- * @author: Gabriel Malaquias
- * @site: github.com/gmalaquias
- * @email: gemalaquias@gmail.com
- */
+
 namespace Valey\Components;
+
+/**
+ * Class DateTime
+ * @author: Gabriel Malaquias <gemalaquias@gmail.com>
+ * @package Valey\Components
+ */
 class DateTime {
     /**
      * @var int
@@ -43,19 +45,23 @@ class DateTime {
      */
     public $datetime;
     /**
-     * @var string
+     * http://php.net/manual/pt_BR/function.date.php
      */
     CONST format = "d/m/Y";
-    /**
-     * @var string
-     */
     CONST dateTimeZone = 'America/Sao_Paulo';
+
+    /**
+     * @return string
+     */
+    public function __toString(){
+        return $this->ToString();
+    }
 
     /**
      * @param $days
      * @return $this
      */
-    public function addDay($days){
+    public function addDay($days = 1){
         $this->datetime->modify("$days days");
         $this->replicateDate();
         return $this;
@@ -64,11 +70,7 @@ class DateTime {
      * @param $month
      * @return $this
      */
-    public function addMonth($month){
-        if($month > 0)
-            $month++;
-        else if($month < 0)
-            $month--;
+    public function addMonth($month = 1){
         $this->datetime->modify("$month month");
         $this->replicateDate();
         return $this;
@@ -77,7 +79,7 @@ class DateTime {
      * @param $year
      * @return $this
      */
-    public function addYear($year){
+    public function addYear($year = 1){
         $this->datetime->modify("$year year");
         $this->replicateDate();
         return $this;
@@ -86,7 +88,7 @@ class DateTime {
      * @param $hour
      * @return $this
      */
-    public function addHour($hour){
+    public function addHour($hour = 1){
         $this->datetime->modify("$hour hour");
         $this->replicateDate();
         return $this;
@@ -95,7 +97,7 @@ class DateTime {
      * @param $minute
      * @return $this
      */
-    public function addMinute($minute){
+    public function addMinute($minute = 1){
         $this->datetime->modify("$minute minute");
         $this->replicateDate();
         return $this;
@@ -104,7 +106,7 @@ class DateTime {
      * @param $minute
      * @return $this
      */
-    public function addSecond($second){
+    public function addSecond($second = 1){
         $this->datetime->modify("$second second");
         $this->replicateDate();
         return $this;
@@ -116,28 +118,48 @@ class DateTime {
     public function ToString($format = null){
         if($format == null)
             $format = DateTime::format;
-
         return $this->datetime->format($format);
+    }
+    /**
+     * @return int
+     */
+    public function getTimestamp(){
+        return $this->datetime->getTimestamp();
     }
     /**
      * @return null
      */
     private function replicateDate(){
-        $this->day = $this->datetime->format("d");
-        $this->month = $this->datetime->format("m");
-        $this->year = $this->datetime->format("Y");
-        $this->hour = $this->datetime->format("H");
-        $this->minute = $this->datetime->format("i");
-        $this->second = $this->datetime->format("s");
-        $this->millisecond = $this->datetime->format("u");
-        $this->date = $this->datetime->format("d/m/Y");
+        if($this->datetime instanceof \DateTime) {
+            $this->day = $this->datetime->format("d");
+            $this->month = $this->datetime->format("m");
+            $this->year = $this->datetime->format("Y");
+            $this->hour = $this->datetime->format("H");
+            $this->minute = $this->datetime->format("i");
+            $this->second = $this->datetime->format("s");
+            $this->millisecond = $this->datetime->format("u");
+            $this->date = $this->datetime->format("d/m/Y");
+        }
     }
     /**
      * @return DateTime
      */
     public static function now(){
-        $datetime = new DateTime();
+        $datetime = new static();
         $datetime->datetime = new \DateTime("now", new \DateTimeZone(DateTime::dateTimeZone));;
+        $datetime->replicateDate();
+        return $datetime;
+    }
+
+    /**
+     * @param $date
+     * @param null $format
+     * @return DateTime
+     */
+    public static function parse($date, $format = null){
+        if($format == null) $format = DateTime::format;
+        $datetime = new static();
+        $datetime->datetime = \DateTime::createFromFormat($format, $date,  new \DateTimeZone(DateTime::dateTimeZone));
         $datetime->replicateDate();
         return $datetime;
     }
